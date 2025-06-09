@@ -268,20 +268,35 @@ footer a:hover {
 /* Color Theme Classes */
 body[data-theme="white"] .theme-color {
     color: #ffffff !important;
+    transition: color 0.5s ease;
 }
 
 body[data-theme="teal"] .theme-color {
     color: #00ffff !important;
+    transition: color 0.5s ease;
 }
 
 body[data-theme="pink"] .theme-color {
     color: #ff00ff !important;
+    transition: color 0.5s ease;
 }
 
 body[data-theme="yellow"] .theme-color {
     color: #ffff00 !important;
+    transition: color 0.5s ease;
 }
 
 body[data-theme="green"] .theme-color {
     color: #00ff00 !important;
+    transition: color 0.5s ease;
+}
+
+/* Add base transition to all theme-color elements */
+.theme-color {
+    transition: color 0.5s ease;
+}
+
+/* Remove transition from images to prevent flickering */
+img.theme-color {
+    transition: none;
 }

@@ -8,8 +8,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const colorSwitcher = document.querySelector('.color-switcher');
     const colorSwitcherIcon = colorSwitcher.querySelector('img');
     const logoImg = document.querySelector('.logo img');
+    const logo = document.querySelector('.logo');
     const colors = ['white', 'teal', 'pink', 'yellow', 'green'];
     let currentColorIndex = 0;
+
+    // Preload all logo and star images
+    const preloadImages = () => {
+        const imageUrls = colors.flatMap(color => [
+            color === 'white' ? 'images/bp_logo_v1.png' : `images/bp_logo_${color}.png`,
+            `images/stars_${color}.png`
+        ]);
+
+        imageUrls.forEach(url => {
+            const img = new Image();
+            img.src = url;
+        });
+    };
+    preloadImages();
+
+    // Logo click handler for confetti
+    logo.addEventListener('click', (e) => {
+        // Only trigger confetti if we're on the home page
+        if (window.location.pathname === '/' || window.location.pathname.endsWith('index.html')) {
+            e.preventDefault();
+            
+            const themeColors = {
+                'white': '#ffffff80',
+                'teal': '#00ffff80',
+                'pink': '#ff00ff80',
+                'yellow': '#ffff0080',
+                'green': '#00ff0080'
+            };
+            
+            // Create multiple confetti bursts with different patterns
+            const rect = logo.getBoundingClientRect();
+            const x = (rect.left + rect.right) / 2 / window.innerWidth;
+            const y = (rect.top + rect.bottom) / 2 / window.innerHeight;
+            
+            // Create 3 bursts with different patterns
+            for (let i = 0; i < 3; i++) {
+                const angle = Math.random() * 360;
+                const spread = 80 + Math.random() * 80; // Random spread between 80-160
+                const drift = -2 + Math.random() * 4; // Random drift between -2 and 2
+                
+                confetti({
+                    particleCount: 20,
+                    spread: spread,
+                    origin: { x, y },
+                    colors: Object.values(themeColors),
+                    ticks: 100 + Math.random() * 60, // Random duration
+                    gravity: 0.8 + Math.random() * 0.4, // Random gravity
+                    scalar: 0.8 + Math.random() * 0.4, // Random size
+                    shapes: ['star'],
+                    startVelocity: 8 + Math.random() * 8, // Random initial velocity
+                    angle: angle,
+                    drift: drift,
+                    decay: 0.88,
+                    random: Math.random(),
+                    flat: Math.random() > 0.5, // Randomly make some stars flat
+                    shapeOptions: {
+                        rotate: Math.random() > 0.5 // Randomly rotate some stars
+                    }
+                });
+            }
+        }
+    });
 
     // Mouse parallax for portfolio items
     portfolioItems.forEach(item => {
@@ -57,10 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update theme
         document.body.dataset.theme = newColor;
         
-        // Update star icon
+        // Update images without fade
         colorSwitcherIcon.src = `images/stars_${newColor}.png`;
-        
-        // Update logo
         logoImg.src = newColor === 'white' ? 
             'images/bp_logo_v1.png' : 
             `images/bp_logo_${newColor}.png`;
